@@ -36,23 +36,27 @@ namespace EstruturaExtracaoXml
             dataGridExtracao.DataSource = dataArquivos;
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void buttonExtract_Click(object sender, EventArgs e)
         {
-            string caminhoDoArquivo = "";
+            
             if (dataGridExtracao.SelectedRows.Count > 0 && dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value.ToString() != "Extraido")
             {
+                string caminhoDoArquivo = "";
                 caminhoDoArquivo = dataGridExtracao.SelectedRows[0].Cells["CaminhoArquivo"].Value.ToString();
-                string tipoEvento = IdentificarEvento(caminhoDoArquivo);
+
+                // Carregar o XML
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(caminhoDoArquivo);
+
+                string tipoEvento = IdentificarEvento(xmlDoc);
 
                 if (tipoEvento != "")
                 {
                     dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value = "Extraido";
-                    string versao = IdentificarVersao(caminhoDoArquivo, tipoEvento);
+                    string versao = IdentificarVersao(xmlDoc, tipoEvento);
                     Form2 form2 = new Form2(tipoEvento, versao);
                     form2.Show();
                 }
-
-                // ExtrairInformacoesDoEvento(caminhoDoArquivo);
             }
             else
             {
@@ -62,17 +66,11 @@ namespace EstruturaExtracaoXml
                 }
                 MessageBox.Show("Nenhuma linha selecionada.");
             }
-            // Instancia o segundo formulário e passa o dado como parâmetro            
         }
-
-        static string IdentificarEvento(string caminhoArquivo)
+        static string IdentificarEvento(XmlDocument xmlDoc)
         {
             try
             {
-                // Carregar o XML
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(caminhoArquivo);
-
                 // Encontrar o nome do evento (tag que começa com '<evt' e termina com '>')
                 string nomeEvento = ExtrairNomeEvento(xmlDoc.InnerXml);
 
@@ -103,14 +101,10 @@ namespace EstruturaExtracaoXml
             return null;
         }
 
-        static string IdentificarVersao(string caminhoArquivo, string tipoEvento)
+        static string IdentificarVersao(XmlDocument xmlDoc, string tipoEvento)
         {
             try
-            {
-                // Carregar o XML
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(caminhoArquivo);
-
+            { 
                 // Obter o elemento "evento"
                 XmlNode eventoNode = xmlDoc.DocumentElement;
 

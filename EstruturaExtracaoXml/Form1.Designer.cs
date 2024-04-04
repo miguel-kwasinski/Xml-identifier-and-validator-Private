@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
             dataGridExtracao = new DataGridView();
             label3 = new Label();
-            button3 = new Button();
+            buttonExtract = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridExtracao).BeginInit();
             SuspendLayout();
             // 
@@ -44,50 +44,51 @@
             dataGridExtracao.AllowUserToDeleteRows = false;
             dataGridExtracao.AllowUserToResizeColumns = false;
             dataGridExtracao.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = SystemColors.GradientInactiveCaption;
-            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.ButtonShadow;
-            dataGridViewCellStyle1.SelectionForeColor = Color.White;
-            dataGridExtracao.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.BackColor = SystemColors.GradientInactiveCaption;
+            dataGridViewCellStyle5.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle5.SelectionBackColor = SystemColors.ButtonShadow;
+            dataGridViewCellStyle5.SelectionForeColor = Color.White;
+            dataGridExtracao.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             dataGridExtracao.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridExtracao.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dataGridExtracao.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
             dataGridExtracao.BackgroundColor = SystemColors.Control;
             dataGridExtracao.BorderStyle = BorderStyle.Fixed3D;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.HotTrack;
-            dataGridViewCellStyle2.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dataGridExtracao.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = SystemColors.HotTrack;
+            dataGridViewCellStyle6.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            dataGridViewCellStyle6.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.True;
+            dataGridExtracao.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
             dataGridExtracao.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = SystemColors.Window;
-            dataGridViewCellStyle3.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            dataGridViewCellStyle3.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.False;
-            dataGridExtracao.DefaultCellStyle = dataGridViewCellStyle3;
-            dataGridExtracao.Location = new Point(12, 99);
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = SystemColors.Window;
+            dataGridViewCellStyle7.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle7.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
+            dataGridExtracao.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridExtracao.Location = new Point(15, 124);
+            dataGridExtracao.Margin = new Padding(4, 4, 4, 4);
             dataGridExtracao.MultiSelect = false;
             dataGridExtracao.Name = "dataGridExtracao";
             dataGridExtracao.ReadOnly = true;
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = SystemColors.Highlight;
-            dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            dataGridViewCellStyle4.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
-            dataGridExtracao.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = SystemColors.Highlight;
+            dataGridViewCellStyle8.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            dataGridViewCellStyle8.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.True;
+            dataGridExtracao.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
             dataGridExtracao.RowHeadersVisible = false;
             dataGridExtracao.RowHeadersWidth = 51;
             dataGridExtracao.RowTemplate.Height = 29;
             dataGridExtracao.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridExtracao.Size = new Size(1141, 547);
+            dataGridExtracao.Size = new Size(1426, 684);
             dataGridExtracao.TabIndex = 8;
             // 
             // label3
@@ -96,38 +97,40 @@
             label3.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point);
             label3.ForeColor = Color.Black;
             label3.ImeMode = ImeMode.NoControl;
-            label3.Location = new Point(12, 71);
+            label3.Location = new Point(15, 89);
+            label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
-            label3.Size = new Size(149, 25);
+            label3.Size = new Size(185, 29);
             label3.TabIndex = 31;
             label3.Text = "Relação de Xml";
             // 
-            // button3
+            // buttonExtract
             // 
-            button3.AutoSize = true;
-            button3.Cursor = Cursors.Hand;
-            button3.FlatAppearance.BorderSize = 2;
-            button3.FlatStyle = FlatStyle.Flat;
-            button3.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
-            button3.ImeMode = ImeMode.NoControl;
-            button3.Location = new Point(1168, 99);
-            button3.Margin = new Padding(3, 4, 3, 4);
-            button3.MinimumSize = new Size(57, 0);
-            button3.Name = "button3";
-            button3.Size = new Size(202, 34);
-            button3.TabIndex = 32;
-            button3.Text = "Iniciar Extração";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
+            buttonExtract.AutoSize = true;
+            buttonExtract.Cursor = Cursors.Hand;
+            buttonExtract.FlatAppearance.BorderSize = 2;
+            buttonExtract.FlatStyle = FlatStyle.Flat;
+            buttonExtract.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            buttonExtract.ImeMode = ImeMode.NoControl;
+            buttonExtract.Location = new Point(1460, 124);
+            buttonExtract.Margin = new Padding(4, 5, 4, 5);
+            buttonExtract.MinimumSize = new Size(71, 0);
+            buttonExtract.Name = "buttonExtract";
+            buttonExtract.Size = new Size(252, 42);
+            buttonExtract.TabIndex = 32;
+            buttonExtract.Text = "Iniciar Extração";
+            buttonExtract.UseVisualStyleBackColor = true;
+            buttonExtract.Click += button3_Click;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1442, 683);
-            Controls.Add(button3);
+            ClientSize = new Size(1802, 854);
+            Controls.Add(buttonExtract);
             Controls.Add(label3);
             Controls.Add(dataGridExtracao);
+            Margin = new Padding(4, 4, 4, 4);
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
@@ -140,6 +143,6 @@
 
         private DataGridView dataGridExtracao;
         private Label label3;
-        private Button button3;
+        private Button buttonExtract;
     }
 }
