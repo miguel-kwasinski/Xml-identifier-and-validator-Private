@@ -1,88 +1,111 @@
+using System;
 using System.Data;
-using System.Xml;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace EstruturaExtracaoXml
 {
     public partial class Form1 : Form
     {
-        DataTable dataArquivos = new DataTable();
+        private DataTable dataArquivos = new DataTable();
 
         public Form1()
         {
             InitializeComponent();
         }
 
-
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Inicializa a DataTable para armazenar informações sobre os arquivos
+            InitializeDataTable();
+
+            // Carrega os arquivos do diretório para a DataTable
+            LoadFiles();
+        }
+
+        private void InitializeDataTable()
+        {
+            // Adiciona colunas à DataTable
             dataArquivos.Columns.Add("CaminhoArquivo");
             dataArquivos.Columns.Add("Situacao");
+        }
 
+        private void LoadFiles()
+        {
+            // Limpa os dados existentes na DataTable
             dataArquivos.Clear();
 
+            // Obtém o caminho do diretório contendo os arquivos XML
             string caminho_raiz = Path.Combine(Environment.CurrentDirectory, "Xml");
 
+            // Obtém os arquivos do diretório
             DirectoryInfo diretorio = new DirectoryInfo(caminho_raiz);
-            FileInfo[] Arquivos = diretorio.GetFiles("*.*");
+            FileInfo[] arquivos = diretorio.GetFiles("*.*");
 
-            foreach (FileInfo fileinfo in Arquivos)
+            // Adiciona informações sobre os arquivos à DataTable
+            foreach (FileInfo fileInfo in arquivos)
             {
-                DataRow colunaArquivo = dataArquivos.NewRow();
-                colunaArquivo[0] = Path.Combine(caminho_raiz, fileinfo.Name);
-                colunaArquivo[1] = "Pendente";
-                dataArquivos.Rows.Add(colunaArquivo);
+                DataRow row = dataArquivos.NewRow();
+                row[0] = Path.Combine(caminho_raiz, fileInfo.Name);
+                row[1] = "Pendente";
+                dataArquivos.Rows.Add(row);
             }
 
+            // Exibe os dados na DataGridView
             dataGridExtracao.DataSource = dataArquivos;
         }
 
-        private void buttonExtract_Click(object sender, EventArgs e)
+        private async void buttonExtract_Click(object sender, EventArgs e)
         {
-            
-            if (dataGridExtracao.SelectedRows.Count > 0 && dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value.ToString() != "Extraido")
+            // Verifica se uma linha foi selecionada
+            if (dataGridExtracao.SelectedRows.Count == 0)
             {
-                string caminhoDoArquivo = "";
-                caminhoDoArquivo = dataGridExtracao.SelectedRows[0].Cells["CaminhoArquivo"].Value.ToString();
-
-                // Carregar o XML
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(caminhoDoArquivo);
-
-                string tipoEvento = IdentificarEvento(xmlDoc);
-
-                if (tipoEvento != "")
-                {
-                    dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value = "Extraido";
-                    string versao = IdentificarVersao(xmlDoc, tipoEvento);
-                    Form2 form2 = new Form2(tipoEvento, versao);
-                    form2.Show();
-                }
-            }
-            else
-            {
-                if (dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value.ToString() == "Extraido")
-                {
-                    MessageBox.Show("Arquivo já extraido");
-                }
                 MessageBox.Show("Nenhuma linha selecionada.");
+                return;
+            }
+
+            // Verifica se o arquivo já foi extraído
+            if (dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value.ToString() == "Extraido")
+            {
+                MessageBox.Show("Arquivo já extraído");
+                return;
+            }
+
+            // Obtém o caminho do arquivo selecionado
+            string caminhoDoArquivo = dataGridExtracao.SelectedRows[0].Cells["CaminhoArquivo"].Value.ToString();
+
+            // Identifica o tipo de evento de forma assíncrona
+            string tipoEvento = await Task.Run(() => IdentificarEvento(caminhoDoArquivo));
+
+            // Se o tipo de evento foi identificado com sucesso
+            if (!string.IsNullOrEmpty(tipoEvento))
+            {
+                // Atualiza o status do arquivo para "Extraido"
+                dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value = "Extraido";
+
+                // Identifica a versão do evento de forma assíncrona
+                string versao = await Task.Run(() => IdentificarVersao(caminhoDoArquivo, tipoEvento));
+
+                // Exibe um novo formulário com informações sobre o evento
+                Form2 form2 = new Form2(tipoEvento, versao);
+                form2.Show();
             }
         }
-        static string IdentificarEvento(XmlDocument xmlDoc)
+
+        private static string IdentificarEvento(string caminhoDoArquivo)
         {
             try
             {
-                // Encontrar o nome do evento (tag que começa com '<evt' e termina com '>')
-                string nomeEvento = ExtrairNomeEvento(xmlDoc.InnerXml);
+                // Carrega o arquivo XML usando XDocument
+                XDocument xmlDoc = XDocument.Load(caminhoDoArquivo);
 
-                // Verificar o nome do evento
-                if (!string.IsNullOrEmpty(nomeEvento))
-                {
-                    return nomeEvento;
-                }
-                else
-                {
-                    return "Nome do evento não encontrado";
-                }
+                // Identifica o tipo de evento
+                string tipoEvento = ExtrairNomeEvento(xmlDoc.Root.ToString());
+                return tipoEvento ?? "Nome do evento não encontrado";
             }
             catch (Exception ex)
             {
@@ -90,8 +113,9 @@ namespace EstruturaExtracaoXml
             }
         }
 
-        static string ExtrairNomeEvento(string xml)
+        private static string ExtrairNomeEvento(string xml)
         {
+            // Extrai o nome do evento do XML
             int startIndex = xml.IndexOf("<evt") + 4;
             int endIndex = xml.IndexOf(" ", startIndex);
             if (startIndex >= 0 && endIndex > startIndex)
@@ -101,37 +125,27 @@ namespace EstruturaExtracaoXml
             return null;
         }
 
-        static string IdentificarVersao(XmlDocument xmlDoc, string tipoEvento)
+        private static string IdentificarVersao(string caminhoDoArquivo, string tipoEvento)
         {
             try
-            { 
-                // Obter o elemento "evento"
-                XmlNode eventoNode = xmlDoc.DocumentElement;
+            {
+                // Carrega o arquivo XML usando XDocument
+                XDocument xmlDoc = XDocument.Load(caminhoDoArquivo);
 
-                // Extrair o texto da linha
-                string textoEvento = eventoNode.InnerXml;
-                string Versao = ExtrairVersao(xmlDoc.InnerXml,tipoEvento);
-                return Versao;                
-
-                /* if (eSocialNode != null)
-                {
-                    return "Versão do evento : " + versaoEvento;
-                }
-                else
-                {
-                    return "Elemento eSocial não encontrado para o evento ";
-                }*/
+                // Identifica a versão do evento
+                string versao = ExtrairVersao(xmlDoc.Root.ToString(), tipoEvento);
+                return versao;
             }
             catch (Exception ex)
             {
-                return "Erro ao identificar a versão do evento : " + ex.Message;
+                return "Erro ao identificar a versão do evento: " + ex.Message;
             }
-            return string.Empty;
         }
 
-        static string ExtrairVersao(string xml, string tipoEvento)
+        private static string ExtrairVersao(string xml, string tipoEvento)
         {
-            int startIndex = xml.IndexOf("/evt/evt" + tipoEvento +"/v") + 10 + tipoEvento.Length ;
+            // Extrai a versão do evento do XML
+            int startIndex = xml.IndexOf($"/evt/evt{tipoEvento}/v") + 10 + tipoEvento.Length;
             int endIndex = xml.IndexOf(">", startIndex) - 1;
             if (startIndex >= 0 && endIndex > startIndex)
             {
