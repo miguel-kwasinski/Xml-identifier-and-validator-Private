@@ -12,12 +12,12 @@ namespace EstruturaExtracaoXml
 {
     public partial class Form2 : Form
     {
-        string eventoGlobal = "", versaoGlobal = "";
-        public Form2(string evento, string versao)
+        private identificaEvento.EventoInfo evtInfo = new identificaEvento.EventoInfo(); 
+        public Form2(identificaEvento.EventoInfo eventoInfo)
         {
             InitializeComponent();
-            eventoGlobal = evento;
-            versaoGlobal = versao;
+            evtInfo = eventoInfo;
+            
         }
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
@@ -27,7 +27,7 @@ namespace EstruturaExtracaoXml
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            ExibeResultado.Text = "Evento: " + eventoGlobal + "  Versão: " + versaoGlobal ;
+            ExibeResultado.Text = "Evento: " + evtInfo.TipoEvento + "  Versão: " + evtInfo.Versao;
         }
     }
 }

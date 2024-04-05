@@ -120,7 +120,7 @@
             buttonExtract.TabIndex = 32;
             buttonExtract.Text = "Iniciar Extração";
             buttonExtract.UseVisualStyleBackColor = true;
-            buttonExtract.Click += button3_Click;
+            buttonExtract.Click += buttonExtract_Click;
             // 
             // Form1
             // 

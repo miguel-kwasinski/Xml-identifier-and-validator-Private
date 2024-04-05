@@ -38,7 +38,7 @@ namespace EstruturaExtracaoXml
 
         private void buttonExtract_Click(object sender, EventArgs e)
         {
-            
+
             if (dataGridExtracao.SelectedRows.Count > 0 && dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value.ToString() != "Extraido")
             {
                 string caminhoDoArquivo = "";
@@ -48,13 +48,17 @@ namespace EstruturaExtracaoXml
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.Load(caminhoDoArquivo);
 
-                string tipoEvento = IdentificarEvento(xmlDoc);
+                //istânciar a classe EventoInfo
+                identificaEvento.EventoInfo eventoInfo = new identificaEvento.EventoInfo();
 
-                if (tipoEvento != "")
+                eventoInfo.TipoEvento = identificaEvento.IdentificarEvento(xmlDoc);
+
+                if (eventoInfo.TipoEvento != "")
                 {
                     dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value = "Extraido";
-                    string versao = IdentificarVersao(xmlDoc, tipoEvento);
-                    Form2 form2 = new Form2(tipoEvento, versao);
+                    eventoInfo.Versao = identificaEvento.IdentificarVersao(xmlDoc,eventoInfo.TipoEvento);
+
+                    Form2 form2 = new Form2(eventoInfo);
                     form2.Show();
                 }
             }
@@ -66,78 +70,6 @@ namespace EstruturaExtracaoXml
                 }
                 MessageBox.Show("Nenhuma linha selecionada.");
             }
-        }
-        static string IdentificarEvento(XmlDocument xmlDoc)
-        {
-            try
-            {
-                // Encontrar o nome do evento (tag que começa com '<evt' e termina com '>')
-                string nomeEvento = ExtrairNomeEvento(xmlDoc.InnerXml);
-
-                // Verificar o nome do evento
-                if (!string.IsNullOrEmpty(nomeEvento))
-                {
-                    return nomeEvento;
-                }
-                else
-                {
-                    return "Nome do evento não encontrado";
-                }
-            }
-            catch (Exception ex)
-            {
-                return "Erro ao identificar o tipo de evento: " + ex.Message;
-            }
-        }
-
-        static string ExtrairNomeEvento(string xml)
-        {
-            int startIndex = xml.IndexOf("<evt") + 4;
-            int endIndex = xml.IndexOf(" ", startIndex);
-            if (startIndex >= 0 && endIndex > startIndex)
-            {
-                return xml.Substring(startIndex, endIndex - startIndex);
-            }
-            return null;
-        }
-
-        static string IdentificarVersao(XmlDocument xmlDoc, string tipoEvento)
-        {
-            try
-            { 
-                // Obter o elemento "evento"
-                XmlNode eventoNode = xmlDoc.DocumentElement;
-
-                // Extrair o texto da linha
-                string textoEvento = eventoNode.InnerXml;
-                string Versao = ExtrairVersao(xmlDoc.InnerXml,tipoEvento);
-                return Versao;                
-
-                /* if (eSocialNode != null)
-                {
-                    return "Versão do evento : " + versaoEvento;
-                }
-                else
-                {
-                    return "Elemento eSocial não encontrado para o evento ";
-                }*/
-            }
-            catch (Exception ex)
-            {
-                return "Erro ao identificar a versão do evento : " + ex.Message;
-            }
-            return string.Empty;
-        }
-
-        static string ExtrairVersao(string xml, string tipoEvento)
-        {
-            int startIndex = xml.IndexOf("/evt/evt" + tipoEvento +"/v") + 10 + tipoEvento.Length ;
-            int endIndex = xml.IndexOf(">", startIndex) - 1;
-            if (startIndex >= 0 && endIndex > startIndex)
-            {
-                return xml.Substring(startIndex, endIndex - startIndex);
-            }
-            return null;
         }
     }
 }
