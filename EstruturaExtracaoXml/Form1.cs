@@ -1,5 +1,6 @@
 using System.Data;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace EstruturaExtracaoXml
 {
@@ -45,18 +46,18 @@ namespace EstruturaExtracaoXml
                 caminhoDoArquivo = dataGridExtracao.SelectedRows[0].Cells["CaminhoArquivo"].Value.ToString();
 
                 // Carregar o XML
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(caminhoDoArquivo);
+                XDocument xDoc = new XDocument();
+                xDoc = XDocument.Load(caminhoDoArquivo);
 
                 //istânciar a classe EventoInfo
                 identificaEvento.EventoInfo eventoInfo = new identificaEvento.EventoInfo();
 
-                eventoInfo.TipoEvento = identificaEvento.IdentificarEvento(xmlDoc);
+                eventoInfo.TipoEvento = identificaEvento.ObterNomeEvento(xDoc);
 
                 if (eventoInfo.TipoEvento != "")
                 {
                     dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value = "Extraido";
-                    eventoInfo.Versao = identificaEvento.IdentificarVersao(xmlDoc,eventoInfo.TipoEvento);
+                    eventoInfo.Versao = identificaEvento.IdentificarVersao(xDoc,eventoInfo.TipoEvento);
 
                     Form2 form2 = new Form2(eventoInfo);
                     form2.Show();

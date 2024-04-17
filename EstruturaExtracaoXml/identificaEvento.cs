@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace EstruturaExtracaoXml
 {
@@ -15,66 +16,64 @@ namespace EstruturaExtracaoXml
             public string TipoEvento { get; set; }
             public string Versao { get; set; }
         }
-        public static string IdentificarEvento(XmlDocument xmlDoc)
+        //public static string IdentificarEvento(XmlDocument xmlDoc)
+        //{
+        //    try
+        //    {
+        //        // Encontrar o nome do evento (tag que começa com '<evt' e termina com '>')
+        //        string nomeEvento = ExtrairNomeEvento(xmlDoc.InnerXml);
+
+        //        // Verificar o nome do evento
+        //        if (!string.IsNullOrEmpty(nomeEvento))
+        //        {
+        //            return nomeEvento;
+        //        }
+        //        else
+        //        {
+        //            return "Nome do evento não encontrado";
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return "Erro ao identificar o tipo de evento: " + ex.Message;
+        //    }
+        //}
+
+        //private static string ExtrairNomeEvento(string xml)
+        //{
+        //    int startIndex = xml.IndexOf("<evt") + 1;
+        //    int endIndex = xml.IndexOf(" ", startIndex);
+        //    if (startIndex >= 0 && endIndex > startIndex)
+        //    {
+        //        return xml.Substring(startIndex, endIndex - startIndex);
+        //    }
+        //    return null;
+        //}
+
+        public static string IdentificarVersao(XDocument xmlDoc, string tipoEvento)
         {
             try
             {
-                // Encontrar o nome do evento (tag que começa com '<evt' e termina com '>')
-                string nomeEvento = ExtrairNomeEvento(xmlDoc.InnerXml);
-
-                // Verificar o nome do evento
-                if (!string.IsNullOrEmpty(nomeEvento))
+                // Extrair o texto do elemento do tipo de evento
+                XElement eventoElement = xmlDoc.Descendants().FirstOrDefault(e => e.Name.LocalName == tipoEvento);
+                if (eventoElement != null)
                 {
-                    return nomeEvento;
+                    string textoEvento = eventoElement.ToString();
+
+                    // Extrair a versão do texto do evento
+                    string versao = ExtrairVersao(textoEvento, tipoEvento);
+
+                    return versao;
                 }
                 else
                 {
-                    return "Nome do evento não encontrado";
+                    return "Tipo de evento não encontrado: " + tipoEvento;
                 }
             }
             catch (Exception ex)
             {
-                return "Erro ao identificar o tipo de evento: " + ex.Message;
+                return "Erro ao identificar a versão do evento: " + ex.Message;
             }
-        }
-
-        private static string ExtrairNomeEvento(string xml)
-        {
-            int startIndex = xml.IndexOf("<evt") + 1;
-            int endIndex = xml.IndexOf(" ", startIndex);
-            if (startIndex >= 0 && endIndex > startIndex)
-            {
-                return xml.Substring(startIndex, endIndex - startIndex);
-            }
-            return null;
-        }
-
-        public static string IdentificarVersao(XmlDocument xmlDoc, string tipoEvento)
-        {
-            try
-            {
-                // Obter o elemento "evento"
-                XmlNode eventoNode = xmlDoc.DocumentElement;
-
-                // Extrair o texto da linha
-                string textoEvento = eventoNode.InnerXml;
-                string Versao = ExtrairVersao(xmlDoc.InnerXml, tipoEvento);
-                return Versao;
-
-                /* if (eSocialNode != null)
-                {
-                    return "Versão do evento : " + versaoEvento;
-                }
-                else
-                {
-                    return "Elemento eSocial não encontrado para o evento ";
-                }*/
-            }
-            catch (Exception ex)
-            {
-                return "Erro ao identificar a versão do evento : " + ex.Message;
-            }
-            return string.Empty;
         }
 
         private static string ExtrairVersao(string xml, string tipoEvento)
@@ -87,5 +86,39 @@ namespace EstruturaExtracaoXml
             }
             return null;
         }
+
+        public static string ObterNomeEvento(XDocument doc)
+        {
+            try
+            {
+                // Verificar se o documento XML não é nulo
+                if (doc == null)
+                {
+                    return "Documento XML nulo";
+                }
+
+                // Definir os nomes dos elementos desejados
+                string[] elementosDesejados = { "evtDeslig", "evtTabRubrica", "evtPgtos", "evtRemun" };
+
+                // Percorrer todos os elementos do documento
+                foreach (var element in doc.Descendants())
+                {
+                    // Verificar se o nome do elemento está na lista de elementos desejados
+                    if (elementosDesejados.Contains(element.Name.LocalName))
+                    {
+                        return element.Name.LocalName;
+                    }
+                }
+
+                return "Nenhum evento encontrado";
+            }
+            catch (Exception ex)
+            {
+                // Lidar com erros de análise XML
+                MessageBox.Show("Erro ao analisar XML: " + ex.Message);
+                return "Erro ao analisar XML";
+            }
+        }
+
     }
 }
