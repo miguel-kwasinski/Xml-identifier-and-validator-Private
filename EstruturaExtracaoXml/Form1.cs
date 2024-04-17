@@ -1,6 +1,7 @@
 using System.Data;
 using System.Xml;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace EstruturaExtracaoXml
 {
@@ -58,6 +59,10 @@ namespace EstruturaExtracaoXml
                 {
                     dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value = "Extraido";
                     eventoInfo.Versao = identificaEvento.IdentificarVersao(xDoc,eventoInfo.TipoEvento);
+                    extratorEvento.XMLNode xmlNode = new extratorEvento.XMLNode();
+                    List<extratorEvento.XMLNode> nodeList = extratorEvento.ExtrairXMLParaLista(xDoc);
+
+
 
                     Form2 form2 = new Form2(eventoInfo);
                     form2.Show();
