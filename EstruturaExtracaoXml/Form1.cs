@@ -1,29 +1,34 @@
+using System;
 using System.Data;
-using System.Xml;
+using System.IO;
+using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace EstruturaExtracaoXml
 {
     public partial class Form1 : Form
     {
-        DataTable dataArquivos = new DataTable();
+        private DataTable dataArquivos = new DataTable();
 
         public Form1()
         {
             InitializeComponent();
+            InicializarDataTable();
         }
 
-
-        private void Form1_Load(object sender, EventArgs e)
+        private void InicializarDataTable()
         {
             dataArquivos.Columns.Add("CaminhoArquivo");
             dataArquivos.Columns.Add("Situacao");
+        }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
             dataArquivos.Clear();
-
             string caminho_raiz = Path.Combine(Environment.CurrentDirectory, "Xml");
-
             DirectoryInfo diretorio = new DirectoryInfo(caminho_raiz);
             FileInfo[] Arquivos = diretorio.GetFiles("*.*");
 
@@ -38,43 +43,49 @@ namespace EstruturaExtracaoXml
             dataGridExtracao.DataSource = dataArquivos;
         }
 
-        private void buttonExtract_Click(object sender, EventArgs e)
+        private async void buttonExtract_Click(object sender, EventArgs e)
         {
-
             if (dataGridExtracao.SelectedRows.Count > 0 && dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value.ToString() != "Extraido")
             {
-                string caminhoDoArquivo = "";
-                caminhoDoArquivo = dataGridExtracao.SelectedRows[0].Cells["CaminhoArquivo"].Value.ToString();
-
-                // Carregar o XML
-                XDocument xDoc = new XDocument();
-                xDoc = XDocument.Load(caminhoDoArquivo);
-
-                //istânciar a classe EventoInfo
-                identificaEvento.EventoInfo eventoInfo = new identificaEvento.EventoInfo();
-
-                eventoInfo.TipoEvento = identificaEvento.ObterNomeEvento(xDoc);
-
-                if (eventoInfo.TipoEvento != "")
-                {
-                    dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value = "Extraido";
-                    eventoInfo.Versao = identificaEvento.IdentificarVersao(xDoc,eventoInfo.TipoEvento);
-                    extratorEvento.XMLNode xmlNode = new extratorEvento.XMLNode();
-                    List<extratorEvento.XMLNode> nodeList = extratorEvento.ExtrairXMLParaLista(xDoc);
-
-
-
-                    Form2 form2 = new Form2(eventoInfo);
-                    form2.Show();
-                }
+                string caminhoDoArquivo = dataGridExtracao.SelectedRows[0].Cells["CaminhoArquivo"].Value.ToString();
+                await ExtrairInformacoesArquivoAsync(caminhoDoArquivo);
             }
             else
             {
-                if (dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value.ToString() == "Extraido")
+                if (dataGridExtracao.SelectedRows.Count == 0)
                 {
-                    MessageBox.Show("Arquivo já extraido");
+                    MessageBox.Show("Nenhuma linha selecionada.");
                 }
-                MessageBox.Show("Nenhuma linha selecionada.");
+                else
+                {
+                    MessageBox.Show("Arquivo já extraído");
+                }
+            }
+        }
+
+        private async Task ExtrairInformacoesArquivoAsync(string caminhoDoArquivo)
+        {
+            try
+            {
+                XDocument xDoc = XDocument.Load(caminhoDoArquivo);
+                string tipoEvento = await Task.Run(() => IdentificaEvento.ObterNomeEvento(xDoc));
+
+                if (!string.IsNullOrEmpty(tipoEvento))
+                {
+                    dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value = "Extraido";
+                    string versao = await IdentificaEvento.IdentificarVersaoAsync(xDoc, tipoEvento);
+
+                    // Chama o método ExtrairXMLParaLista para obter os nós XML
+                    List<ExtratorEvento.XMLNode> nodeList = await ExtratorEvento.ExtrairXMLParaListaAsync(xDoc.Root).ToListAsync();
+                    // Agora você pode usar a lista 'nodeList' conforme necessário
+                    // Por exemplo, exibir os nós em uma caixa de mensagem:
+                    string nodesText = string.Join("\n", nodeList.Select(node => $"{node.Name}: {node.Value}"));
+                    MessageBox.Show($"Nós XML extraídos:\n{nodesText}");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao extrair informações do arquivo: {ex.Message}");
             }
         }
     }

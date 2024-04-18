@@ -1,124 +1,33 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
-public static class extratorEvento
+namespace EstruturaExtracaoXml
 {
-    public class XMLNode
+    public static class ExtratorEvento
     {
-        public string Name { get; set; }
-        public string Value { get; set; }
-        // Adicione outros atributos relevantes conforme necessário
-    }
-
-    public static List<XMLNode> ExtrairXMLParaLista(XDocument xmlDoc)
-    {
-        List<XMLNode> nodeList = new List<XMLNode>();
-
-        // Percorre todos os nós do XML e adiciona à lista de objetos XMLNode
-        foreach (XElement element in xmlDoc.Descendants())
+        // Classe para representar um nó XML
+        public class XMLNode
         {
-            XMLNode node = new XMLNode();
-            node.Name = element.Name.LocalName;
-            node.Value = element.Value;
-            // Adicione outros atributos conforme necessário
-            nodeList.Add(node);
+            public string Name { get; set; } // Nome do elemento XML
+            public string Value { get; set; } // Valor do elemento XML
+                                              // Você pode adicionar outros atributos relevantes conforme necessário
         }
 
-        return nodeList;
+        // Método para extrair o conteúdo do XML para uma lista de objetos XMLNode
+        public static async IAsyncEnumerable<XMLNode> ExtrairXMLParaListaAsync(XElement xmlElement)
+        {
+            await Task.Yield(); // Simula uma operação assíncrona
+
+            foreach (var element in xmlElement.Descendants())
+            {
+                yield return new XMLNode
+                {
+                    Name = element.Name.LocalName,
+                    Value = element.Value
+                    // Adicione outros atributos conforme necessário
+                };
+            }
+        }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //public static void ExtrairEvento(string tipoEvento, string versaoEvento)
-    //{
-    //    switch (tipoEvento)
-    //    {
-    //        case "evtRemun":
-    //            ExtrairEventoRemun(versaoEvento);
-    //            break;
-    //        case "evtAfastTemp":
-    //            ExtrairEventoAfastTemp(versaoEvento);
-    //            break;
-    //        case "evtDeslig":
-    //            ExtrairEventoDeslig(versaoEvento);
-    //            break;
-    //        case "evtTabRubr":
-    //            ExtrairEventoTabRubr(versaoEvento);
-    //            break;
-    //        default:
-    //            Console.WriteLine("Tipo de evento não reconhecido");
-    //            break;
-    //    }
-    //}
-
-    //private static void ExtrairEventoRemun(string versaoEvento)
-    //{
-    //    switch (versaoEvento)
-    //    {
-    //        // Implemente a extração para a versão do evento evtRemun
-    //        default:
-    //            Console.WriteLine("Versão do evento não reconhecida");
-    //            break;
-    //    }
-    //}
-
-    //private static void ExtrairEventoAfastTemp(string versaoEvento)
-    //{
-    //    switch (versaoEvento)
-    //    {
-    //        // Implemente a extração para a versão do evento evtAfastTemp
-    //        default:
-    //            Console.WriteLine("Versão do evento não reconhecida");
-    //            break;
-    //    }
-    //}
-
-    //private static void ExtrairEventoDeslig(string versaoEvento)
-    //{
-    //    switch (versaoEvento)
-    //    {
-    //        // Implemente a extração para a versão do evento evtDeslig
-    //        default:
-    //            Console.WriteLine("Versão do evento não reconhecida");
-    //            break;
-    //    }
-    //}
-
-    //private static void ExtrairEventoTabRubr(string versaoEvento)
-    //{
-    //    switch (versaoEvento)
-    //    {
-    //        // Implemente a extração para a versão do evento evtTabRubr
-    //        default:
-    //            Console.WriteLine("Versão do evento não reconhecida");
-    //            break;
-    //    }
-    //}
 }
