@@ -77,10 +77,13 @@ namespace EstruturaExtracaoXml
 
                     // Chama o método ExtrairXMLParaLista para obter os nós XML
                     List<ExtratorEvento.XMLNode> nodeList = await ExtratorEvento.ExtrairXMLParaListaAsync(xDoc.Root).ToListAsync();
-                    // Agora você pode usar a lista 'nodeList' conforme necessário
-                    // Por exemplo, exibir os nós em uma caixa de mensagem:
-                    string nodesText = string.Join("\n", nodeList.Select(node => $"{node.Name}: {node.Value}"));
-                    MessageBox.Show($"Nós XML extraídos:\n{nodesText}");
+
+                    // Chama o método FiltrarPorNomeDoNo para filtrar os nós pelo nome
+                    string nomeParaFiltrar = "detVerbas"; // Substitua "NomeDesejado" pelo nome desejado
+                    List<ExtratorEvento.XMLNode> nodeListFiltrados = ExtratorEvento.FiltrarPorNomeDoNo(nodeList, nomeParaFiltrar).ToList();
+
+                    string kct;
+  
                 }
             }
             catch (Exception ex)
