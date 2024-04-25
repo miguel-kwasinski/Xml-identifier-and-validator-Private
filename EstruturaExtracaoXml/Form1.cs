@@ -48,7 +48,7 @@ namespace EstruturaExtracaoXml
             if (dataGridExtracao.SelectedRows.Count > 0 && dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value.ToString() != "Extraido")
             {
                 string caminhoDoArquivo = dataGridExtracao.SelectedRows[0].Cells["CaminhoArquivo"].Value.ToString();
-                await ExtrairInformacoesArquivoAsync(caminhoDoArquivo);
+                await ExtrairInformacoesXMLAsync(caminhoDoArquivo);
             }
             else
             {
@@ -63,7 +63,7 @@ namespace EstruturaExtracaoXml
             }
         }
 
-        private async Task ExtrairInformacoesArquivoAsync(string caminhoDoArquivo)
+        private async Task ExtrairInformacoesXMLAsync(string caminhoDoArquivo)
         {
             try
             {
@@ -82,7 +82,13 @@ namespace EstruturaExtracaoXml
                     string nomeParaFiltrar = "detVerbas"; // Substitua "NomeDesejado" pelo nome desejado
                     List<ExtratorEvento.XMLNode> nodeListFiltrados = ExtratorEvento.FiltrarPorNomeDoNo(nodeList, nomeParaFiltrar).ToList();
 
-                    string kct;
+                    string nomeParaExtrair = "detVerbas";
+                    ExtratorEvento.XMLNode retorno = new ExtratorEvento.XMLNode();
+                    do
+                    {
+                        retorno = ExtratorEvento.ExtrairERemoverPrimeroElemento(nodeList, nomeParaExtrair);
+                    } while (retorno != null);
+                    string ForStop;
   
                 }
             }
