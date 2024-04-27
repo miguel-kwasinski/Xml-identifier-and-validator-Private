@@ -21,16 +21,6 @@ namespace EstruturaExtracaoXml
 
         private void InicializarDataTable()
         {
-            // Inicializa a DataTable para armazenar informações sobre os arquivos
-            InitializeDataTable();
-
-            // Carrega os arquivos do diretório para a DataTable
-            LoadFiles();
-        }
-
-        private void InitializeDataTable()
-        {
-            // Adiciona colunas à DataTable
             dataArquivos.Columns.Add("CaminhoArquivo");
             dataArquivos.Columns.Add("Situacao");
         }
@@ -40,18 +30,16 @@ namespace EstruturaExtracaoXml
             dataArquivos.Clear();
             string caminho_raiz = Path.Combine(Environment.CurrentDirectory, "Xml");
             DirectoryInfo diretorio = new DirectoryInfo(caminho_raiz);
-            FileInfo[] arquivos = diretorio.GetFiles("*.*");
+            FileInfo[] Arquivos = diretorio.GetFiles("*.*");
 
-            // Adiciona informações sobre os arquivos à DataTable
-            foreach (FileInfo fileInfo in arquivos)
+            foreach (FileInfo fileinfo in Arquivos)
             {
-                DataRow row = dataArquivos.NewRow();
-                row[0] = Path.Combine(caminho_raiz, fileInfo.Name);
-                row[1] = "Pendente";
-                dataArquivos.Rows.Add(row);
+                DataRow colunaArquivo = dataArquivos.NewRow();
+                colunaArquivo[0] = Path.Combine(caminho_raiz, fileinfo.Name);
+                colunaArquivo[1] = "Pendente";
+                dataArquivos.Rows.Add(colunaArquivo);
             }
 
-            // Exibe os dados na DataGridView
             dataGridExtracao.DataSource = dataArquivos;
         }
 
@@ -95,14 +83,14 @@ namespace EstruturaExtracaoXml
                     List<string> nodeNames = await IdentificaEvento.NomesDesejadosPorEventoAsync(eventoInfo);
 
                     // Chama o método FiltrarPorNomeDoNo para filtrar os nós pelo nome
-                    List<ExtratorEventoGeral.XMLNode> nodeListFiltrados = ExtratorEventoGeral.FiltrarPorNomeDoNo(nodeList,nodeNames ).ToList();
+                    List<ExtratorEventoGeral.XMLNode> nodeListFiltrados = ExtratorEventoGeral.FiltrarPorNomeDoNo(nodeList, nodeNames).ToList();
 
                     string nomeParaExtrair = "detVerbas";
                     ExtratorEventoGeral.XMLNode retorno = new ExtratorEventoGeral.XMLNode();
                     do
                     {
                         retorno = ExtratorEventoGeral.ExtrairERemoverPrimeroElemento(nodeList, nomeParaExtrair);
-                    } while (retorno != null);  
+                    } while (retorno != null);
                 }
             }
             catch (Exception ex)
