@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EstruturaExtracaoXml
 {
-    public static class ExtratorEvento
+    public static class ExtratorEventoGeral
     {
         // Classe para representar um nó XML
         public class XMLNode
@@ -33,10 +33,10 @@ namespace EstruturaExtracaoXml
         }
 
         // Método para filtrar os nós XML por nome
-        public static IEnumerable<XMLNode> FiltrarPorNomeDoNo(IEnumerable<XMLNode> lista, string nome)
+        public static IEnumerable<XMLNode> FiltrarPorNomeDoNo(IEnumerable<XMLNode> lista, List<string> nodeNames)
         {
-            // Filtra os nós da lista com o nome fornecido
-            return lista.Where(item => item.Name == nome);
+            // Filtra os nós da lista com os nomes fornecidos
+            return lista.Where(item => nodeNames.Contains(item.Name));
         }
 
         // Método para encontrar e remover o primeiro elemento com o nome especificado

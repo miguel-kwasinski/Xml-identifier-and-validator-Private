@@ -123,5 +123,35 @@ namespace EstruturaExtracaoXml
                 return "Erro ao analisar XML: " + ex.Message;
             }
         }
+
+
+        public static async Task<List<string>> NomesDesejadosPorEventoAsync(EventoInfo eventInfo)
+        {
+            // Criar lista de nomes vazia
+            List<string> nomesDesejados = new List<string>();
+
+            // Obter nomes específicos para cada tipo de evento
+            switch (eventInfo.TipoEvento)
+            {
+                case "evtPgtos":
+                    nomesDesejados.AddRange(new List<string> { "NomePagamento", "ValorPagamento", "DataPagamento" });
+                    break;
+                case "evtDeslig":
+                    nomesDesejados.AddRange(new List<string> { "MotivoDesligamento", "DataDesligamento", "MatriculaFuncionario" });
+                    break;
+                case "evtTabRubrica":
+                    nomesDesejados.AddRange(new List<string> { "CodigoRubrica", "DescricaoRubrica", "ValorRubrica" });
+                    break;
+                case "evtRemun":
+                    nomesDesejados.AddRange(new List<string> { "MatriculaFuncionario", "SalarioBase", "ValorDescontos" });
+                    break;
+                default:
+                    // Se o tipo de evento não for reconhecido, retorna null
+                    return null;
+            }
+            // Retornar a lista de nomes assincronamente
+            return nomesDesejados;
+
+        }
     }
 }

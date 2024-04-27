@@ -68,28 +68,29 @@ namespace EstruturaExtracaoXml
             try
             {
                 XDocument xDoc = XDocument.Load(caminhoDoArquivo);
-                string tipoEvento = await Task.Run(() => IdentificaEvento.ObterNomeEvento(xDoc));
+                IdentificaEvento.EventoInfo eventoInfo = new IdentificaEvento.EventoInfo();
+                eventoInfo.TipoEvento = await Task.Run(() => IdentificaEvento.ObterNomeEvento(xDoc));
 
-                if (!string.IsNullOrEmpty(tipoEvento))
+                if (!string.IsNullOrEmpty(eventoInfo.TipoEvento))
                 {
                     dataGridExtracao.SelectedRows[0].Cells["Situacao"].Value = "Extraido";
-                    string versao = await IdentificaEvento.IdentificarVersaoAsync(xDoc, tipoEvento);
+                    eventoInfo.Versao = await IdentificaEvento.IdentificarVersaoAsync(xDoc, eventoInfo.TipoEvento);
 
                     // Chama o método ExtrairXMLParaLista para obter os nós XML
-                    List<ExtratorEvento.XMLNode> nodeList = await ExtratorEvento.ExtrairXMLParaListaAsync(xDoc.Root).ToListAsync();
+                    List<ExtratorEventoGeral.XMLNode> nodeList = await ExtratorEventoGeral.ExtrairXMLParaListaAsync(xDoc.Root).ToListAsync();
+
+                    //Cria a lista de elementos que irão ser extraidos 
+                    List<string> nodeNames = await IdentificaEvento.NomesDesejadosPorEventoAsync(eventoInfo);
 
                     // Chama o método FiltrarPorNomeDoNo para filtrar os nós pelo nome
-                    string nomeParaFiltrar = "detVerbas"; // Substitua "NomeDesejado" pelo nome desejado
-                    List<ExtratorEvento.XMLNode> nodeListFiltrados = ExtratorEvento.FiltrarPorNomeDoNo(nodeList, nomeParaFiltrar).ToList();
+                    List<ExtratorEventoGeral.XMLNode> nodeListFiltrados = ExtratorEventoGeral.FiltrarPorNomeDoNo(nodeList,nodeNames ).ToList();
 
                     string nomeParaExtrair = "detVerbas";
-                    ExtratorEvento.XMLNode retorno = new ExtratorEvento.XMLNode();
+                    ExtratorEventoGeral.XMLNode retorno = new ExtratorEventoGeral.XMLNode();
                     do
                     {
-                        retorno = ExtratorEvento.ExtrairERemoverPrimeroElemento(nodeList, nomeParaExtrair);
-                    } while (retorno != null);
-                    string ForStop;
-  
+                        retorno = ExtratorEventoGeral.ExtrairERemoverPrimeroElemento(nodeList, nomeParaExtrair);
+                    } while (retorno != null);  
                 }
             }
             catch (Exception ex)
