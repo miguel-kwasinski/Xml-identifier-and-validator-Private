@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -8,12 +9,14 @@ namespace EstruturaExtracaoXml
 {
     public static class IdentificaEvento
     {
+        // Classe para armazenar informações sobre o evento
         public class EventoInfo
         {
-            public string TipoEvento { get; set; }
-            public string Versao { get; set; }
+            public string TipoEvento { get; set; } // Tipo do evento
+            public string Versao { get; set; } // Versão do evento
         }
 
+        // Método assíncrono para identificar a versão do evento
         public static async Task<string> IdentificarVersaoAsync(XDocument xmlDoc, string tipoEvento)
         {
             try
@@ -40,6 +43,7 @@ namespace EstruturaExtracaoXml
             }
         }
 
+        // Método privado para extrair a versão do evento a partir do XML
         private static string ExtrairVersao(string xml, string tipoEvento)
         {
             // Localiza o índice inicial e final da versão no XML
@@ -88,6 +92,7 @@ namespace EstruturaExtracaoXml
             return versao;
         }
 
+        // Método para obter o nome do evento a partir do documento XML
         public static string ObterNomeEvento(XDocument doc)
         {
             try
@@ -124,7 +129,7 @@ namespace EstruturaExtracaoXml
             }
         }
 
-
+        // Método assíncrono para obter os nomes desejados por evento
         public static async Task<List<string>> NomesDesejadosPorEventoAsync(EventoInfo eventInfo)
         {
             // Criar lista de nomes vazia
