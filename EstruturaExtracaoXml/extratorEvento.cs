@@ -39,7 +39,8 @@ namespace EstruturaExtracaoXml
             return lista.Where(item => nodeNames.Contains(item.Name));
         }
 
-        // Método para encontrar e remover o primeiro elemento com o nome especificado
+        // Método para encontrar e remover o primeiro elemento com o nome especificado 
+        /* Caso precise utilizar este método para fazer a extração para variáveis*/
         public static XMLNode ExtrairERemoverPrimeroElemento(List<XMLNode> nodes, string elementName)
         {
             // Encontra o primeiro elemento com o nome especificado na lista de nós

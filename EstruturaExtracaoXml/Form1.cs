@@ -85,12 +85,39 @@ namespace EstruturaExtracaoXml
                     // Chama o método FiltrarPorNomeDoNo para filtrar os nós pelo nome
                     List<ExtratorEventoGeral.XMLNode> nodeListFiltrados = ExtratorEventoGeral.FiltrarPorNomeDoNo(nodeList, nodeNames).ToList();
 
-                    string nomeParaExtrair = "detVerbas";
-                    ExtratorEventoGeral.XMLNode retorno = new ExtratorEventoGeral.XMLNode();
-                    do
+                    /*demonstração de utilização dos valores da lista*/
+
+                    // Busca o nome do objeto desejado pelo usuário (substitua por como você obtém esse nome)
+                    string nomeDoObjeto = "ideEvento";
+
+                    // Filtra a lista com base no nome do objeto
+                    List<ExtratorEventoGeral.XMLNode> objetosEncontrados = nodeListFiltrados
+                        .Where(node => node.Name.Equals(nomeDoObjeto, StringComparison.OrdinalIgnoreCase))
+                        .ToList(); // Obtém todos os elementos encontrados (pode haver vários)
+
+                    // Verifica se algum objeto foi encontrado
+                    if (objetosEncontrados.Count > 0)
                     {
-                        retorno = ExtratorEventoGeral.ExtrairERemoverPrimeroElemento(nodeList, nomeParaExtrair);
-                    } while (retorno != null);
+                        // Mensagem inicial para indicar o início da listagem
+                        MessageBox.Show($"Objetos encontrados com o nome '{nomeDoObjeto}':");
+
+                        // Loop para exibir cada objeto encontrado
+                        for (int i = 0; i < objetosEncontrados.Count; i++)
+                        {
+                            ExtratorEventoGeral.XMLNode objetoAtual = objetosEncontrados[i];
+
+                            // Mensagem exibindo o nome e valor do objeto
+                            MessageBox.Show($"Objeto {i + 1}:\nNome: {objetoAtual.Name}\nValor: {objetoAtual.Value}");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Objeto '{nomeDoObjeto}' não encontrado na lista.");
+                    }
+
+
+                    /*Aqui adicionar a lógica para o insert no banco de dados à partir da lista*/
+
                 }
             }
             catch (Exception ex)

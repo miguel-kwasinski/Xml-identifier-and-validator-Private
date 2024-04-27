@@ -139,16 +139,16 @@ namespace EstruturaExtracaoXml
             switch (eventInfo.TipoEvento)
             {
                 case "evtPgtos":
-                    nomesDesejados.AddRange(new List<string> { "NomePagamento", "ValorPagamento", "DataPagamento" });
+                    nomesDesejados.AddRange(new List<string> { "ideEvento", "cpfBenef", "nrRecibo" }); //Nós para exemplificar
                     break;
                 case "evtDeslig":
-                    nomesDesejados.AddRange(new List<string> { "MotivoDesligamento", "DataDesligamento", "MatriculaFuncionario" });
+                    nomesDesejados.AddRange(new List<string> { "ideEvento", "ideVinculo", "cpfTrab" }); 
                     break;
                 case "evtTabRubrica":
-                    nomesDesejados.AddRange(new List<string> { "CodigoRubrica", "DescricaoRubrica", "ValorRubrica" });
+                    nomesDesejados.AddRange(new List<string> { "ideEvento", "dhRecepcao", "nrRecibo" });
                     break;
                 case "evtRemun":
-                    nomesDesejados.AddRange(new List<string> { "MatriculaFuncionario", "SalarioBase", "ValorDescontos" });
+                    nomesDesejados.AddRange(new List<string> { "ideEvento", "cpfTrab", "codRubr" });
                     break;
                 default:
                     // Se o tipo de evento não for reconhecido, retorna null
